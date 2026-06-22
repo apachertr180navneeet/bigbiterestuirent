@@ -45,6 +45,7 @@ class ReceiptController extends Controller
             'mode' => 'nullable|in:cash,upi,bank,card',
             'manager_status' => 'nullable|in:pending,accpet,rejected',
             'status' => 'nullable|in:pending,accpet,rejected',
+            'discount_type' => 'nullable|in:cd,disc',
             'salesperson_id' => 'nullable|exists:salespersons,id',
             'firm_id' => 'nullable|exists:customers,id',
         ]);
@@ -90,6 +91,10 @@ class ReceiptController extends Controller
 
         if (!empty($validated['status'])) {
             $query->where('status', $validated['status']);
+        }
+
+        if (!empty($validated['discount_type'])) {
+            $query->where('discount_type', $validated['discount_type']);
         }
 
         if (!empty($validated['firm_id'])) {
@@ -143,6 +148,7 @@ class ReceiptController extends Controller
             'date_to' => 'nullable|date|after_or_equal:date_from',
             'mode' => 'nullable|in:cash,upi,bank,card',
             'status' => 'nullable|in:pending,accpet,rejected',
+            'discount_type' => 'nullable|in:cd,disc',
             'salesperson_id' => 'nullable|exists:salespersons,id',
             'firm_id' => 'nullable|exists:customers,id',
         ]);
@@ -187,6 +193,10 @@ class ReceiptController extends Controller
 
         if (!empty($validated['status'])) {
             $query->where('status', $validated['status']);
+        }
+
+        if (!empty($validated['discount_type'])) {
+            $query->where('discount_type', $validated['discount_type']);
         }
 
         if (!empty($validated['firm_id'])) {
@@ -437,6 +447,26 @@ class ReceiptController extends Controller
         return response()->json($invoices);
     }
 
+
+    public function updateDiscountType(Request $request, $id)
+    {
+        $request->validate([
+            'discount_type' => 'nullable|in:cd,disc',
+            'discount' => 'nullable|numeric|min:0',
+        ]);
+
+        $receipt = Receipt::findOrFail($id);
+        $receipt->discount_type = $request->discount_type;
+        if ($request->has('discount')) {
+            $receipt->discount = $request->discount;
+        }
+        $receipt->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Discount updated successfully',
+        ]);
+    }
 
     public function changeStatus(Request $request, $id)
     {

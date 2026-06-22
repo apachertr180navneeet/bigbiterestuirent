@@ -68,6 +68,7 @@ Route::name('admin.')->prefix('admin')->group(function () {
                 Route::post('/status/{id}', [$controller, 'changeStatus'])->name('status');
                 Route::get('/edit/{id}', [$controller, 'edit'])->name('edit');
                 Route::post('/update/{id}', [$controller, 'update'])->name('update');
+                Route::post('/update-discount-type/{id}', [$controller, 'updateDiscountType'])->name('updateDiscountType');
             });
         }
 

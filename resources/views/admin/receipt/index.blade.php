@@ -135,6 +135,7 @@
                                     <th>Date</th>
                                     <th>B./No.</th>
                                     <th>Bill Amt</th>
+                                    <th>CD/DSC</th>
                                     <th>R. Amt</th>
                                     <th>Firm Name</th>
                                     <th>Payment Mode</th>
@@ -152,6 +153,30 @@
     </div>
 </div>
 @endsection
+
+{{-- Discount Modal --}}
+<div class="modal fade" id="discountModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Enter Discount Value</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="discount_receipt_id" value="">
+                <input type="hidden" id="discount_type_val" value="">
+                <div class="mb-3">
+                    <label for="discount_value" class="form-label">Discount Amount</label>
+                    <input type="number" step="0.01" min="0" id="discount_value" class="form-control" placeholder="Enter discount amount">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmDiscountBtn">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 {{-- Approval Remark Modal --}}
 <div class="modal fade" id="approvalRemarkModal" tabindex="-1" aria-hidden="true">
@@ -186,6 +211,7 @@
     const editReceiptUrl = "{{ route('admin.receipt.edit', ':id') }}";
     const changeReceiptStatusUrl = "{{ route('admin.receipt.status', ':id') }}";
     const getPendingInvoicesUrl = "{{ route('get.pending.invoices', ':id') }}";
+    const updateDiscountTypeUrl = "{{ route('admin.receipt.updateDiscountType', ':id') }}";
     const exportReceiptExcelUrl = "{{ route('admin.receipt.excel') }}";
     const isSuperAdmin = {{ \App\Helpers\Helper::isSuperAdmin() ? 'true' : 'false' }};
 </script>

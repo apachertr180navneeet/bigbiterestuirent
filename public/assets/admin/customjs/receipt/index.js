@@ -73,6 +73,19 @@ $(document).ready(function () {
                 },
 
                 {
+                    data: "discount",
+                    render: function (data, type, row) {
+                        var val = parseFloat(data) || 0;
+                        var selected = row.discount_type ? row.discount_type.toLowerCase() : '';
+                        var options = '<option value="">-</option>'
+                            + '<option value="cd"' + (selected === 'cd' ? ' selected' : '') + '>CD</option>'
+                            + '<option value="disc"' + (selected === 'disc' ? ' selected' : '') + '>DISC</option>';
+                        return '<select class="form-select form-select-sm discount-type-select" data-id="' + row.id + '" style="min-width:80px">' + options + '</select>'
+                            + (val > 0 ? ' <small class="text-muted">' + val.toFixed(2) + '</small>' : '');
+                    }
+                },
+
+                {
                     data: "given_amount",
                     render: data => Number(data || 0).toFixed(2)
                 },
@@ -507,6 +520,52 @@ $(document).ready(function () {
 
     });
 
+
+    /*
+    =========================
+    UPDATE DISCOUNT TYPE
+    =========================
+    */
+
+    $(document).on("change", ".discount-type-select", function () {
+
+        var id = $(this).data("id");
+        var discount_type = $(this).val();
+
+        if (!discount_type) return;
+
+        $("#discount_receipt_id").val(id);
+        $("#discount_type_val").val(discount_type);
+        $("#discount_value").val("");
+        $("#discountModal .modal-title").text("Enter " + discount_type.toUpperCase() + " Value");
+        $("#discountModal").modal("show");
+
+    });
+
+    $("#confirmDiscountBtn").on("click", function () {
+
+        var id = $("#discount_receipt_id").val();
+        var discount_type = $("#discount_type_val").val();
+        var discount_value = $("#discount_value").val();
+
+        $.ajax({
+            url: updateDiscountTypeUrl.replace(":id", id),
+            type: "POST",
+            data: {
+                discount_type: discount_type,
+                discount: discount_value
+            },
+            success: function (response) {
+                toastr.success(response.message || "Discount updated");
+                $("#discountModal").modal("hide");
+                receiptTable.ajax.reload(null, false);
+            },
+            error: function () {
+                toastr.error("Something went wrong");
+            }
+        });
+
+    });
 
      /*
     =========================
