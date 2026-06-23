@@ -2023,8 +2023,12 @@
 	 */
 	function _fnColumnOptions( oSettings, iCol, oOptions )
 	{
-		var oCol = oSettings.aoColumns[ iCol ];
-	
+	var oCol = oSettings.aoColumns[ iCol ];
+
+	if ( ! oCol ) {
+		return;
+	}
+
 		/* User specified column options */
 		if ( oOptions !== undefined && oOptions !== null )
 		{

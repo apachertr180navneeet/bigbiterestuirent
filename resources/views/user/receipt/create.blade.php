@@ -213,8 +213,8 @@
                     }
 
                     $.each(data, function (index, invoice) {
-                        let paid = invoice.paid_amount ?? 0;
-                        let payable = invoice.payable_amount ?? 0;
+                        let paid = invoice.paid_amount || 0;
+                        let payable = invoice.payable_amount || 0;
                         let remaining = payable - paid;
 
                         invoiceDropdown.append(`
